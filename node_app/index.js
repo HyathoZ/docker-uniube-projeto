@@ -17,10 +17,11 @@ app.get("/", (req, res) => {
   res.send("Hello world!");
 });
 
-app.get("/users", async (req, res) => {
+app.get("/api/v1/cliente:id", async (req, res) => {
   try {
+    const cliente = req.params.id;
     const connection = await mysql.createConnection(dbConfig);
-    const [rows] = await connection.execute("SELECT * FROM users");
+    const [rows] = await connection.execute("SELECT * FROM clientes WHERE id = ?", [cliente]);
     await connection.end();
     res.json(rows);
   } catch (err) {
