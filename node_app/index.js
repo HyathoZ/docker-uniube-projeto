@@ -17,7 +17,7 @@ app.get("/", (req, res) => {
   res.send("Hello world!");
 });
 
-app.get("/api/v1/cliente:id", async (req, res) => {
+app.get("/api/v1/cliente/:id", async (req, res) => {
   try {
     const cliente = req.params.id;
     const connection = await mysql.createConnection(dbConfig);
