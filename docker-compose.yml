@@ -1,4 +1,13 @@
 services:
+  api:
+    build: .
+    container_name: api-node
+    volumes:
+      - .:/app          # mapeia seu código local para dentro do container
+      - /app/node_modules # evita conflito do node_modules
+    ports:
+      - "3000:3000"
+    command: npm run dev
   mysql:
     image: mysql:8.0
     container_name: mysql_db
