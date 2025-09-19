@@ -48,7 +48,7 @@ app.post("/api/v1/cliente", async (req, res) => {
     );
     await connection.end();
     res.status(201).json({
-      message: "Cliente criado com sucesso!",
+      message: `Cliente ${nome} criado com sucesso!`,
       clienteId: result.insertId,
     });
   } catch (err) {
@@ -78,7 +78,11 @@ app.put("/api/v1/cliente/:id", async (req, res) => {
     const { id } = req.params;
     const { nome, email, telefone } = req.body;
     const connection = await mysql.createConnection(dbConfig);
-    await connection.execute(`UPDATE clientes SET nome = ?, email = ?, telefone = ? WHERE id = ?`[nome, email, telefone, id]);
+    await connection.execute(
+  'UPDATE clientes SET nome = ?, email = ?, telefone = ? WHERE id = ?',
+  [nome, email, telefone, id]
+);
+    await connection.end();
     res.send(`Cliente ${nome} atualizado com sucesso!`);
   } catch (err) {
     res.status(500).json({ error: err.message });

@@ -1,13 +1,37 @@
+version: '3.8'
+
 services:
+  # API Node.js
   api:
-    build: .
+    image: node:20-alpine
     container_name: api-node
+    restart: always
+    working_dir: /app
     volumes:
-      - .:/app          # mapeia seu código local para dentro do container
-      - /app/node_modules # evita conflito do node_modules
+      - ./node_app:/app
+      - /app/node_modules
+    command: sh -c "npm install && npm run dev"
+    ports:
+      - "3002:3001"
+    depends_on:
+      - mysql
+
+  # Next.js App
+  nextjs_app:
+    image: node:20-alpine
+    container_name: nextjs_app
+    restart: always
+    working_dir: /app
+    volumes:
+      - ./nextjs_app:/app
+      - /app/node_modules
+    command: sh -c "npm install && npm run dev"
     ports:
       - "3000:3000"
-    command: npm run dev
+    depends_on:
+      - mysql
+
+  # MySQL
   mysql:
     image: mysql:8.0
     container_name: mysql_db
@@ -23,6 +47,7 @@ services:
     ports:
       - "3306:3306"
 
+  # phpMyAdmin
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: phpmyadmin
@@ -35,6 +60,7 @@ services:
     depends_on:
       - mysql
 
+  # Flask App
   flask_app:
     image: python:3.11-slim
     container_name: flask_app
@@ -52,33 +78,7 @@ services:
     depends_on:
       - mysql
 
-  node_app:
-    image: node:20-alpine
-    container_name: node_app
-    restart: always
-    working_dir: /app
-    volumes:
-      - ./node_app:/app
-    command: >
-      sh -c "npm install && npm start"
-    ports:
-      - "3001:3001"
-    depends_on:
-      - mysql
-
-  nextjs_app:
-    image: node:20-alpine
-    container_name: nextjs_app
-    restart: always
-    working_dir: /app
-    volumes:
-      - ./nextjs_app:/app
-    command: >
-      sh -c "npm install && npm run dev"
-    ports:
-      - "3000:3000"
-    depends_on:
-      - mysql
+  # MongoDB
   mongo:
     image: mongo:6.0
     container_name: mongo_db
@@ -92,6 +92,7 @@ services:
     ports:
       - "27017:27017"
 
+  # Mongo Express
   mongo_express:
     image: mongo-express:1.0
     container_name: mongo_express
