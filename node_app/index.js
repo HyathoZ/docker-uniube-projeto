@@ -73,7 +73,7 @@ app.delete("/api/v1/cliente/:id", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-app.put("/api/v1/cliente/:id", async (req, res) => {
+app.patch("/api/v1/cliente/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const { nome, email, telefone } = req.body;
